@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Marco Mambelli — scientific computing, distributed systems, HPC, GlideinWMS, and HEPCloud." />
+  <title>Marco Mambelli | Scientific Computing & Distributed Systems</title>
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1025;
+      --card: rgba(14, 22, 48, 0.70);
+      --card-solid: #101932;
+      --text: #f5f7ff;
+      --muted: #a9b3d1;
+      --cyan: #47e7ff;
+      --blue: #4f7cff;
+      --violet: #a66cff;
+      --pink: #ff5fa2;
+      --green: #56f3b2;
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(79, 124, 255, 0.22), transparent 31rem),
+        radial-gradient(circle at 85% 20%, rgba(166, 108, 255, 0.18), transparent 28rem),
+        radial-gradient(circle at 65% 85%, rgba(71, 231, 255, 0.12), transparent 30rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .orb {
+      position: fixed;
+      z-index: -1;
+      width: 26rem;
+      height: 26rem;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.20;
+      pointer-events: none;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      top: -8rem;
+      right: -7rem;
+      background: var(--violet);
+    }
+
+    .orb.two {
+      bottom: -10rem;
+      left: -8rem;
+      background: var(--cyan);
+      animation-delay: -6s;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-20px, 0, 0) scale(1); }
+      to   { transform: translate3d(35px, 28px, 0) scale(1.12); }
+    }
+
+    .container {
+      width: min(calc(100% - 2rem), var(--max-width));
+      margin-inline: auto;
+    }
+
+    nav {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      z-index: 100;
+      width: min(calc(100% - 2rem), 1120px);
+      transform: translateX(-50%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(5, 8, 22, 0.68);
+      box-shadow: 0 12px 45px rgba(0,0,0,.25);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      min-height: 64px;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #050816;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      box-shadow: 0 0 26px rgba(71, 231, 255, .35);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
+    .nav-links a {
+      transition: color .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      padding: .65rem 1rem;
+      border: 1px solid rgba(71, 231, 255, .35);
+      border-radius: 12px;
+      color: var(--cyan);
+      background: rgba(71, 231, 255, .07);
+    }
+
+    header {
+      min-height: 100vh;
+      padding: 9rem 0 5rem;
+      display: grid;
+      align-items: center;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin-bottom: 1.4rem;
+      padding: .45rem .8rem;
+      border: 1px solid rgba(86, 243, 178, .25);
+      border-radius: 999px;
+      color: var(--green);
+      background: rgba(86, 243, 178, .07);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 850px;
+      font-size: clamp(3.2rem, 8vw, 7.5rem);
+      line-height: .92;
+      letter-spacing: -.065em;
+    }
+
+    .gradient-text {
+      color: transparent;
+      background: linear-gradient(95deg, var(--cyan), var(--blue) 42%, var(--violet) 72%, var(--pink));
+      background-clip: text;
+      -webkit-background-clip: text;
+      background-size: 200% auto;
+      animation: shine 6s linear infinite;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin-top: 1.75rem;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.7vw, 1.28rem);
+    }
+
+    .hero-copy strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .9rem;
+    }
+
+    .button {
+      min-height: 50px;
+      padding: .8rem 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      font-weight: 800;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+    }
+
+    .button.primary {
+      color: #050816;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--cyan), #7d8cff);
+      box-shadow: 0 16px 45px rgba(71, 231, 255, .20);
+    }
+
+    .button.secondary {
+      background: rgba(255,255,255,.045);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 470px;
+      display: grid;
+      place-items: center;
+    }
+
+    .core {
+      position: relative;
+      width: min(78vw, 350px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, rgba(71,231,255,.25), transparent 36%),
+        rgba(14,22,48,.32);
+      box-shadow:
+        inset 0 0 55px rgba(79,124,255,.12),
+        0 0 90px rgba(79,124,255,.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .core::before,
+    .core::after {
+      content: "";
+      position: absolute;
+      border: 1px dashed rgba(71,231,255,.34);
+      border-radius: 50%;
+      animation: spin 18s linear infinite;
+    }
+
+    .core::before { inset: -34px; }
+    .core::after {
+      inset: 34px;
+      border-style: solid;
+      border-color: rgba(166,108,255,.25);
+      animation-direction: reverse;
+      animation-duration: 12s;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .monogram {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(4.2rem, 10vw, 7.4rem);
+      font-weight: 950;
+      letter-spacing: -.09em;
+      color: transparent;
+      background: linear-gradient(135deg, white, var(--cyan), var(--violet));
+      background-clip: text;
+      -webkit-background-clip: text;
+      filter: drop-shadow(0 0 24px rgba(71,231,255,.20));
+    }
+
+    .satellite {
+      position: absolute;
+      z-index: 3;
+      padding: .65rem .85rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: rgba(9,14,35,.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      font-size: .78rem;
+      font-weight: 800;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .satellite.s1 { top: 8%; left: 0; }
+    .satellite.s2 { top: 28%; right: -2%; animation-delay: -1s; }
+    .satellite.s3 { bottom: 13%; left: 5%; animation-delay: -2s; }
+    .satellite.s4 { bottom: 1%; right: 10%; animation-delay: -3s; }
+
+    @keyframes float {
+      50% { transform: translateY(-10px); }
+    }
+
+    section {
+      padding: 6rem 0;
+    }
+
+    .section-heading {
+      margin-bottom: 2.3rem;
+      display: grid;
+      grid-template-columns: .75fr 1.25fr;
+      gap: 2rem;
+      align-items: end;
+    }
+
+    .kicker {
+      color: var(--cyan);
+      font-size: .83rem;
+      font-weight: 850;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-top: .5rem;
+      font-size: clamp(2.3rem, 5vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: -.055em;
+    }
+
+    .section-intro {
+      max-width: 700px;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .glass {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 1rem;
+    }
+
+    .about-card {
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    .about-card p {
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .about-card p + p {
+      margin-top: 1rem;
+    }
+
+    .about-card strong {
+      color: var(--text);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .stat {
+      min-height: 150px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-5px);
+      border-color: rgba(71,231,255,.35);
+    }
+
+    .stat-number {
+      font-size: 2.35rem;
+      font-weight: 900;
+      letter-spacing: -.05em;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+    }
+
+    .project {
+      position: relative;
+      min-height: 320px;
+      padding: 2rem;
+      overflow: hidden;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+
+    .project:hover {
+      transform: translateY(-6px);
+      border-color: rgba(71,231,255,.35);
+    }
+
+    .project:nth-child(1) { grid-column: span 7; }
+    .project:nth-child(2) { grid-column: span 5; }
+    .project:nth-child(3) { grid-column: span 5; }
+    .project:nth-child(4) { grid-column: span 7; }
+
+    .project::after {
+      content: "";
+      position: absolute;
+      width: 15rem;
+      height: 15rem;
+      right: -6rem;
+      bottom: -7rem;
+      border-radius: 50%;
+      background: var(--glow, var(--blue));
+      opacity: .13;
+      filter: blur(16px);
+      transition: transform .4s ease;
+    }
+
+    .project:hover::after {
+      transform: scale(1.2);
+    }
+
+    .project-index {
+      color: var(--cyan);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .8rem;
+    }
+
+    .project h3 {
+      margin-top: 2.7rem;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.05;
+      letter-spacing: -.04em;
+    }
+
+    .project p {
+      max-width: 620px;
+      margin-top: 1rem;
+      color: var(--muted);
+    }
+
+    .tags {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .tag {
+      padding: .35rem .65rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #dbe2ff;
+      background: rgba(255,255,255,.04);
+      font-size: .76rem;
+    }
+
+    .skills-wrap {
+      padding: 2rem;
+    }
+
+    .skill-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+
+    .skill {
+      padding: .7rem .95rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,.035);
+      transition: .2s ease;
+    }
+
+    .skill:hover {
+      color: var(--text);
+      border-color: rgba(166,108,255,.45);
+      transform: translateY(-3px) rotate(-1deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,.20);
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 21px;
+      width: 1px;
+      background: linear-gradient(var(--cyan), var(--violet), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 1.5rem 1.5rem 1.5rem 4rem;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 1.75rem;
+      left: 14px;
+      width: 15px;
+      height: 15px;
+      border: 3px solid var(--bg);
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(71,231,255,.15), 0 0 22px rgba(71,231,255,.55);
+    }
+
+    .timeline-item h3 {
+      font-size: 1.35rem;
+    }
+
+    .timeline-item p {
+      margin-top: .45rem;
+      color: var(--muted);
+    }
+
+    .contact {
+      position: relative;
+      padding: clamp(2rem, 6vw, 4rem);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .contact::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      z-index: -1;
+      background: conic-gradient(from 90deg, transparent, rgba(71,231,255,.18), transparent, rgba(166,108,255,.20), transparent);
+      animation: spin 16s linear infinite;
+    }
+
+    .contact h2 {
+      max-width: 850px;
+      margin-inline: auto;
+    }
+
+    .contact p {
+      max-width: 700px;
+      margin: 1.2rem auto 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .contact .hero-actions {
+      justify-content: center;
+    }
+
+    footer {
+      padding: 2.5rem 0 3.5rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .footer-inner {
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .75s ease, transform .75s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+
+      .hero,
+      .section-heading,
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        gap: 2rem;
+      }
+
+      .hero-visual {
+        min-height: 400px;
+      }
+
+      .section-heading {
+        align-items: start;
+      }
+
+      .project:nth-child(n) {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 560px) {
+      nav { top: .55rem; }
+
+      header {
+        padding-top: 7.5rem;
+      }
+
+      h1 {
+        font-size: clamp(3.1rem, 17vw, 5.3rem);
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 340px;
+      }
+
+      .satellite {
+        font-size: .66rem;
+      }
+
+      .satellite.s1 { left: -2%; }
+      .satellite.s2 { right: -2%; }
+
+      section {
+        padding: 4.5rem 0;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <nav aria-label="Main navigation">
+    <div class="nav-inner">
+      <a class="logo" href="#top" aria-label="Back to top">
+        <span class="logo-mark">MM</span>
+        <span>Marco Mambelli</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#skills">Expertise</a>
+        <a href="#impact">Impact</a>
+        <a class="nav-cta" href="#contact">Connect</a>
+      </div>
+    </div>
+  </nav>
+
+  <header id="top">
+    <div class="container hero">
+      <div class="hero-content reveal">
+        <div class="eyebrow">Scientific computing · HPC · Distributed systems</div>
+
+        <h1>
+          I build systems that make
+          <span class="gradient-text">science scale.</span>
+        </h1>
+
+        <p class="hero-copy">
+          I’m <strong>Marco Mambelli</strong>, a scientific-computing specialist working at the
+          intersection of distributed systems, high-throughput computing, cloud services, and
+          high-performance computing. My work helps researchers turn complex infrastructure into
+          reliable computing power.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="#work">Explore my work <span>↘</span></a>
+          <a class="button secondary" href="https://github.com/glideinWMS" target="_blank" rel="noreferrer">View GlideinWMS ↗</a>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" aria-hidden="true">
+        <div class="core">
+          <div class="monogram">MM</div>
+        </div>
+        <div class="satellite s1">GlideinWMS</div>
+        <div class="satellite s2">HEPCloud</div>
+        <div class="satellite s3">HPC Access</div>
+        <div class="satellite s4">Automation</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="about">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="kicker">About me</div>
+            <h2>Engineering behind discovery.</h2>
+          </div>
+          <p class="section-intro">
+            I transform heterogeneous computing resources into infrastructure that scientists can
+            use consistently—across local clusters, grids, clouds, leadership-class supercomputers,
+            and emerging computing platforms.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="about-card glass reveal">
+            <p>
+              My focus is the software layer between <strong>scientific workloads</strong> and the
+              computing facilities that execute them. I work on resource provisioning, workload
+              management, authentication, automation, observability, deployment, and the practical
+              integration of HPC systems into high-throughput computing environments.
+            </p>
+            <p>
+              I also contribute to technical leadership, documentation, mentoring, collaboration,
+              and programs that connect students and researchers with meaningful work in physics,
+              engineering, and computing.
+            </p>
+          </article>
+
+          <div class="stats">
+            <div class="stat glass reveal">
+              <div class="stat-number gradient-text">HTC</div>
+              <div class="stat-label">High-throughput computing at scale</div>
+            </div>
+            <div class="stat glass reveal">
+              <div class="stat-number gradient-text">HPC</div>
+              <div class="stat-label">Access to national supercomputing facilities</div>
+            </div>
+            <div class="stat glass reveal">
+              <div class="stat-number gradient-text">CI/CD</div>
+              <div class="stat-label">Repeatable testing, delivery, and releases</div>
+            </div>
+            <div class="stat glass reveal">
+              <div class="stat-number gradient-text">Open</div>
+              <div class="stat-label">Collaborative, reusable scientific software</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="kicker">Selected work</div>
+            <h2>Systems with real-world reach.</h2>
+          </div>
+          <p class="section-intro">
+            A portfolio spanning workload provisioning, hybrid computing, authentication,
+            infrastructure automation, and education.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project glass reveal" style="--glow: var(--cyan)">
+            <div class="project-index">01 / GLIDEINWMS</div>
+            <h3>Elastic resource provisioning for distributed science</h3>
+            <p>
+              Advancing GlideinWMS technologies that provision computing resources dynamically for
+              HTCondor workloads across grids, clouds, clusters, and HPC systems.
+            </p>
+            <div class="tags">
+              <span class="tag">HTCondor</span>
+              <span class="tag">Python</span>
+              <span class="tag">Workload management</span>
+              <span class="tag">Distributed computing</span>
+            </div>
+          </article>
+
+          <article class="project glass reveal" style="--glow: var(--violet)">
+            <div class="project-index">02 / HEPCLOUD</div>
+            <h3>Hybrid computing for demanding scientific workflows</h3>
+            <p>
+              Connecting scientific workloads with diverse commercial, institutional, and
+              leadership-class computing resources through scalable orchestration.
+            </p>
+            <div class="tags">
+              <span class="tag">Hybrid cloud</span>
+              <span class="tag">Resource orchestration</span>
+              <span class="tag">Scientific workflows</span>
+            </div>
+          </article>
+
+          <article class="project glass reveal" style="--glow: var(--green)">
+            <div class="project-index">03 / HPC ACCESS</div>
+            <h3>Bridging HTC workloads and supercomputers</h3>
+            <p>
+              Designing adapters and access paths using SSH, facility APIs, login nodes, batch
+              schedulers, credential services, and secure automation.
+            </p>
+            <div class="tags">
+              <span class="tag">SSH</span>
+              <span class="tag">SFApi</span>
+              <span class="tag">Schedulers</span>
+              <span class="tag">Credential management</span>
+            </div>
+          </article>
+
+          <article class="project glass reveal" style="--glow: var(--pink)">
+            <div class="project-index">04 / SOFTWARE QUALITY</div>
+            <h3>Reliable delivery for long-lived scientific software</h3>
+            <p>
+              Improving testing, documentation, release automation, containerized CI/CD, security
+              practices, and maintainability for software used by distributed research communities.
+            </p>
+            <div class="tags">
+              <span class="tag">GitHub Actions</span>
+              <span class="tag">Containers</span>
+              <span class="tag">Testing</span>
+              <span class="tag">Documentation</span>
+              <span class="tag">Release engineering</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="kicker">Expertise</div>
+            <h2>From protocol to platform.</h2>
+          </div>
+          <p class="section-intro">
+            Deep technical work, system integration, and practical problem-solving across the
+            scientific-computing stack.
+          </p>
+        </div>
+
+        <div class="skills-wrap glass reveal">
+          <div class="skill-cloud">
+            <span class="skill">GlideinWMS</span>
+            <span class="skill">HTCondor</span>
+            <span class="skill">HEPCloud</span>
+            <span class="skill">High-performance computing</span>
+            <span class="skill">High-throughput computing</span>
+            <span class="skill">Python</span>
+            <span class="skill">Linux</span>
+            <span class="skill">Bash</span>
+            <span class="skill">SSH automation</span>
+            <span class="skill">REST APIs</span>
+            <span class="skill">SciTokens</span>
+            <span class="skill">OAuth 2.0</span>
+            <span class="skill">X.509 credentials</span>
+            <span class="skill">Containers</span>
+            <span class="skill">CI/CD</span>
+            <span class="skill">GitHub Actions</span>
+            <span class="skill">Software architecture</span>
+            <span class="skill">Distributed systems</span>
+            <span class="skill">Technical documentation</span>
+            <span class="skill">Mentoring</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="impact">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="kicker">Impact</div>
+            <h2>Technology that enables people.</h2>
+          </div>
+          <p class="section-intro">
+            The best infrastructure disappears into the background, giving researchers and students
+            the freedom to focus on discovery.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item glass reveal">
+            <span class="timeline-dot"></span>
+            <h3>Expanding access to advanced computing</h3>
+            <p>
+              Making heterogeneous resources available through familiar workload-management
+              interfaces, reducing operational friction for scientific collaborations.
+            </p>
+          </article>
+
+          <article class="timeline-item glass reveal">
+            <span class="timeline-dot"></span>
+            <h3>Modernizing scientific software</h3>
+            <p>
+              Strengthening security, automation, maintainability, testing, and deployment without
+              losing the reliability required by production research infrastructure.
+            </p>
+          </article>
+
+          <article class="timeline-item glass reveal">
+            <span class="timeline-dot"></span>
+            <h3>Growing the next generation</h3>
+            <p>
+              Supporting students, interns, and international research programs that create
+              lasting connections among computing, engineering, and fundamental science.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact glass reveal">
+          <div class="kicker">Let’s connect</div>
+          <h2>Building the infrastructure behind tomorrow’s discoveries.</h2>
+          <p>
+            I’m interested in scientific computing, distributed systems, HPC integration,
+            collaborative software engineering, and projects that expand access to powerful
+            computing resources.
+          </p>
+
+          <div class="hero-actions">
+            <!-- Replace the address below with your preferred email. -->
+            <a class="button primary" href="mailto:your.email@example.com">Start a conversation ↗</a>
+            <a class="button secondary" href="https://github.com/glideinWMS" target="_blank" rel="noreferrer">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Marco Mambelli</span>
+      <span>Scientific computing · Distributed systems · HPC</span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
+
+    // Subtle pointer-reactive glow.
+    document.addEventListener("pointermove", event => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 18;
+      const y = (event.clientY / window.innerHeight - 0.5) * 18;
+      document.documentElement.style.setProperty("--pointer-x", `${x}px`);
+      document.documentElement.style.setProperty("--pointer-y", `${y}px`);
+    });
+  </script>
+</body>
+</html>
