@@ -33,7 +33,7 @@ List of pages:
 - Buy some RAM here!!!!!  [RAM Listings](ramprices.html)
 - [Very cool Dino Game](DinosaurGame.html)
 - [CrazyCortez](CrazyCortez.html)
-
+- [Instruments](Instruments.html)
 
 [These pages on GitHub](https://github.com/mambelli/cookies)
 
