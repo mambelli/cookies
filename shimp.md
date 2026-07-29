@@ -159,8 +159,6 @@
     let autoClicks = 0;
     let upgradeCost = 50;
 
-    const sound = new Audio("RohenLibraries/RohenHello.mp3");
-
     function spawnHead() {
         const head = document.createElement("img");
         head.src = "RohenLibraries/IMG_6400.jpg";
@@ -176,14 +174,26 @@
         setTimeout(() => head.remove(), 1200);
     }
 
+    function playSound() {
+        const s = new Audio("RohenLibraries/RohenHello.mp3");
+
+        const chance = Math.random() * 100;
+
+        if (chance < 1) {
+            s.volume = 2.5;
+        } else {
+            s.volume = Math.random() * (1.0 - 0.11) + 0.11;
+        }
+
+        s.play();
+    }
+
     function generateRohen() {
         score++;
         scoreCount.textContent = score;
 
         spawnHead();
-
-        sound.currentTime = 0;
-        sound.play();
+        playSound();
 
         if (score >= upgradeCost) upgradeButton.disabled = false;
     }
@@ -211,7 +221,9 @@
 
     setInterval(() => {
         if (autoClicks > 0) {
-            generateRohen();
+            for (let i = 0; i < autoClicks; i++) {
+                generateRohen();
+            }
         }
     }, 1000);
 </script>
