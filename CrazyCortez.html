@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Penguin Sumo Slider</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1a2634;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin: 10px 0 5px 0;
+    }
+
+    #score-board {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      border: 4px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      background-color: #aae5f7;
+    }
+
+    .custom-section {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .player-box {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.85rem;
+    }
+
+    .player-box input[type="text"] {
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      gap: 40px;
+      font-size: 0.9rem;
+    }
+
+    .p1-color { color: #0066ff; }
+    .p2-color { color: #ff3333; }
+  </style>
+</head>
+<body>
+
+  <h1>🐧 Penguin Sumo Slider 🐧</h1>
+  
+  <div id="score-board">
+    <span class="p1-color">Player 1: <b id="p1-score">0</b></span> | 
+    <span class="p2-color">Player 2: <b id="p2-score">0</b></span>
+  </div>
+
+  <div class="custom-section">
+    <div class="player-box">
+      <b class="p1-color">Player 1 Image:</b>
+      <input type="file" id="p1-file" accept="image/*">
+      <span>or URL:</span>
+      <input type="text" id="p1-url" placeholder="Paste image link...">
+    </div>
+    <div class="player-box">
+      <b class="p2-color">Player 2 Image:</b>
+      <input type="file" id="p2-file" accept="image/*">
+      <span>or URL:</span>
+      <input type="text" id="p2-url" placeholder="Paste image link...">
+    </div>
+  </div>
+
+  <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+  <div class="controls">
+    <div><b class="p1-color">Player 1:</b> WASD to Slide</div>
+    <div><b class="p2-color">Player 2:</b> Arrow Keys to Slide</div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Load image from relative repo/folder path
+    const p1Img = new Image();
+    p1Img.src = "./pictures/CORTEZ.jpg";
+
+    const p2Img = new Image();
+    p2Img.src = "./pictures/CORTEZ.jpg";
+
+    // Dynamic Image Loaders
+    document.getElementById('p1-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) p1Img.src = URL.createObjectURL(file);
+    });
+    document.getElementById('p1-url').addEventListener('input', (e) => {
+      if (e.target.value.trim() !== '') p1Img.src = e.target.value;
+    });
+
+    document.getElementById('p2-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) p2Img.src = URL.createObjectURL(file);
+    });
+    document.getElementById('p2-url').addEventListener('input', (e) => {
+      if (e.target.value.trim() !== '') p2Img.src = e.target.value;
+    });
+
+    // Arena Settings
+    const ARENA_CENTER = { x: canvas.width / 2, y: canvas.height / 2 };
+    const ARENA_RADIUS = 280;
+
+    // Scores
+    let p1Score = 0;
+    let p2Score = 0;
+
+    // Input Tracking
+    const keys = {};
+    window.addEventListener('keydown', e => keys[e.key] = true);
+    window.addEventListener('keyup', e => keys[e.key] = false);
+
+    // Player Class
+    class SumoSlider {
+      constructor(x, y, radius, image, strokeColor) {
+        this.startX = x;
+        this.startY = y;
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.radius = radius;
+        this.image = image;
+        this.strokeColor = strokeColor;
+        this.friction = 0.985;
+        this.accel = 0.35;
+        this.mass = 1;
+      }
+
+      reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        this.vx = 0;
+        this.vy = 0;
+      }
+
+      update() {
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+        this.x += this.vx;
+        this.y += this.vy;
+      }
+
+      draw() {
+        ctx.save();
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+
+        if (this.image.complete && this.image.naturalWidth !== 0) {
+          ctx.drawImage(
+            this.image, 
+            this.x - this.radius, 
+            this.y - this.radius, 
+            this.radius * 2, 
+            this.radius * 2
+          );
+        } else {
+          ctx.fillStyle = this.strokeColor;
+          ctx.fill();
+        }
+
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = this.strokeColor;
+        ctx.stroke();
+      }
+    }
+
+    const p1 = new SumoSlider(200, 300, 30, p1Img, '#0066ff');
+    const p2 = new SumoSlider(400, 300, 30, p2Img, '#ff3333');
+
+    function handleCollision(p1, p2) {
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      const distance = Math.hypot(dx, dy);
+      const minDistance = p1.radius + p2.radius;
+
+      if (distance < minDistance) {
+        const overlap = minDistance - distance;
+        const nx = dx / (distance || 1);
+        const ny = dy / (distance || 1);
+
+        p1.x -= nx * (overlap / 2);
+        p1.y -= ny * (overlap / 2);
+        p2.x += nx * (overlap / 2);
+        p2.y += ny * (overlap / 2);
+
+        const kx = p1.vx - p2.vx;
+        const ky = p1.vy - p2.vy;
+        const p = 2 * (nx * kx + ny * ky) / (p1.mass + p2.mass);
+
+        p1.vx -= p * p2.mass * nx * 1.2;
+        p1.vy -= p * p2.mass * ny * 1.2;
+        p2.vx += p * p1.mass * nx * 1.2;
+        p2.vy += p * p1.mass * ny * 1.2;
+      }
+    }
+
+    function handleInputs() {
+      if (keys['w'] || keys['W']) p1.vy -= p1.accel;
+      if (keys['s'] || keys['S']) p1.vy += p1.accel;
+      if (keys['a'] || keys['A']) p1.vx -= p1.accel;
+      if (keys['d'] || keys['D']) p1.vx += p1.accel;
+
+      if (keys['ArrowUp'])    p2.vy -= p2.accel;
+      if (keys['ArrowDown'])  p2.vy += p2.accel;
+      if (keys['ArrowLeft'])  p2.vx -= p2.accel;
+      if (keys['ArrowRight']) p2.vx += p2.accel;
+    }
+
+    function checkRingOut(player) {
+      const distFromCenter = Math.hypot(player.x - ARENA_CENTER.x, player.y - ARENA_CENTER.y);
+      return distFromCenter > ARENA_RADIUS;
+    }
+
+    function resetRound() {
+      p1.reset();
+      p2.reset();
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      ctx.arc(ARENA_CENTER.x, ARENA_CENTER.y, ARENA_RADIUS, 0, Math.PI * 2);
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#00c3ff';
+      ctx.stroke();
+
+      handleInputs();
+      p1.update();
+      p2.update();
+      handleCollision(p1, p2);
+
+      p1.draw();
+      p2.draw();
+
+      if (checkRingOut(p1)) {
+        p2Score++;
+        document.getElementById('p2-score').innerText = p2Score;
+        resetRound();
+      } else if (checkRingOut(p2)) {
+        p1Score++;
+        document.getElementById('p1-score').innerText = p1Score;
+        resetRound();
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>
