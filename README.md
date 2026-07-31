@@ -15,7 +15,7 @@ List of pages:
 - [Fermilab Air Quality Index](airqualityindex.html)
 - [Chess](chess.html)
 - [Marco's page](marco.html) and [the one ChatGPT geneated for marco](marco_mambelli_portfolio.html)
-- [Josh's page (best page)](shimp.html)
+- [ROHEN CLICKER 1.2.0 OUT NOW!!!!!](shimp.html)
 - [FIND SHOWER ASAP](shower%20scanner.html.html)
 - [Platformer](platformer.html)
 - [Lights](anims.html)
